@@ -1,0 +1,4 @@
+export DEBUGGER=false    # Options: [true, false]
+export DEBUG_BRK=false  # Options: [true, false]
+export NODE_ENV=staging   # Options: [local, development, staging, production]
+export DOCKER_ENV=staging
