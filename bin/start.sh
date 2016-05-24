@@ -14,6 +14,29 @@ if [ -z $DOCKER_ENV ]; then
   exit 1
 fi
 
+# Check to see if our node_modules directory does not exist
+if [ ! -d $PROJECT_ROOT/node_modules ]; then
+  # If not, it was probably wiped out by Vagrant mounting a host volume
+  # on the start of the container, which wipes out the the node_modules
+  # folder that was created by the image. So we will just copy it back in
+  # from the /tmp folder just like we do in the Dockerfile
+  echo "Copying node_modules"
+  cp -a /tmp/app/node_modules $PROJECT_ROOT
+
+  # And we'll also rebuild our static files
+  # npm run gulp build
+fi
+
+# Wait till Postgres is available before continuing
+while true; do
+    psql -c "select pg_postmaster_start_time()" >/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        break
+    fi
+    echo "Waiting to connect to Postgres..."
+    sleep 1
+done
+
 if [ "$DOCKER_ENV" == "local" ] || [ "$DOCKER_ENV" == "development" ]; then
   if psql -lqt | cut -d \| -f 1 | grep -w $GENESIS_PROJECT_DB_NAME; then
     echo "$GENESIS_PROJECT_DB_NAME database already exists...moving on"
@@ -28,7 +51,7 @@ if [ "$DOCKER_ENV" == "local" ] || [ "$DOCKER_ENV" == "development" ]; then
 fi
 
 if [ "$DOCKER_ENV" == "local" ] || [ "$DOCKER_ENV" == "development" ]; then
-  echo "Run migrations..."
+  echo "Running migrations..."
   sequelize db:migrate
 fi
 
