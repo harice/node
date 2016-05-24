@@ -1,0 +1,25 @@
+db_data:
+  image: busybox
+  volumes:
+    - /var/lib/postgresql/data
+db:
+  image: postgres:9.4.4
+  environment:
+    POSTGRES_PASSWORD: notsosecretpassword
+  volumes_from:
+    - db_data
+  ports:
+    - '5432:5432'
+api:
+  build: .
+  environment:
+    POSTGRES_PASSWORD: notsosecretpassword
+  volumes:
+    - /projects/genesis-project-api:/opt/app
+  ports:
+    - "8011:8011"
+    - "8778:8778"
+    - "5995:5995"
+    - "8069:8069"
+  links:
+    - db:postgres
