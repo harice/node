@@ -34,6 +34,7 @@ const manifest = {
     { plugin: './api/auth' },
     { plugin: './api/user' },
     { plugin: './api/post' },
+    { plugin: './api/permission' },
     {
       plugin: {
         register: 'hapi-swagger',
