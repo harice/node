@@ -46,6 +46,7 @@
     "pg-hstore": "^2.3.2",
     "query-string": "^3.0.0",
     "sequelize": "^3.19.0",
+    "sharp": "^0.15.0",
     "sqlizr": "^1.2.0",
     "vision": "^4.0.0"
   },

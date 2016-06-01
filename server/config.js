@@ -61,9 +61,9 @@ const config = {
   },
 
   aws: {
-    accessKeyId: '',
-    secretAccessKey: '',
-    region: '' //aws region here, recommended: us-west-2
+    accessKeyId: 'AKIAJODVXOKGFLOSDAGA',
+    secretAccessKey: '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',
+    region: 'us-west-2' //aws region here, recommended: us-west-2
   },
 
   media: {
@@ -92,6 +92,11 @@ const config = {
         }
       }
     }
+  },
+
+  avatarImageDefaultDimension: { // square
+    height: 200, // px
+    widht: 200 // px
   }
 
 }
