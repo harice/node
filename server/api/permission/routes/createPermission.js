@@ -13,7 +13,7 @@ export default {
     validate: {
       payload: {
         role: Joi.number().integer().required(),
-        resource : Joi.object();
+        //resource : Joi.object();
       }
     },
     plugins: {
