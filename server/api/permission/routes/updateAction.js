@@ -7,8 +7,8 @@ export default {
   path: '/actions/{id}',
   config: {
     tags: ['api', 'actions'],
-    description: 'Updates a action',
-    notes: 'Updates a action.',
+    description: 'Updates an action',
+    notes: 'Updates an action and returns fail or success.',
     cors: true,
     auth : false,
     validate: {
@@ -39,13 +39,13 @@ export default {
           id: request.params.id
         }
       })
-        .then(action => {
-          if (!action) throw Boom.notFound('No action found.');
-          return action.set(request.payload).save();
+      .then(action => {
+        if (!action) throw Boom.notFound('No action found.');
 
-        })
-        .catch(Sequelize.ValidationError, convertValidationErrors)
-        .asCallback(reply);
+        return action.set(request.payload).save();
+      })
+      .catch(Sequelize.ValidationError, convertValidationErrors)
+      .asCallback(reply);
     }
   }
 }

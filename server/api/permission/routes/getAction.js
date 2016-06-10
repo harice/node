@@ -6,9 +6,9 @@ export default {
   method: 'GET',
   path: '/actions/{id}',
   config: {
-    tags: ['api', 'action'],
-    description: 'Gets info of action',
-    notes: "Returns an info action",
+    tags: ['api', 'actions'],
+    description: 'Gets a action\'s info',
+    notes: "Returns the action\'s details.",
     auth: false,
     cors: true,
     validate: {
@@ -34,7 +34,7 @@ export default {
         }
       })
       .then(action => {
-        if (!action) throw Boom.notFound('No Action found.');
+        if (!action) throw Boom.notFound('No action found.');
 
         return action.sanitizeForResponse();
       })

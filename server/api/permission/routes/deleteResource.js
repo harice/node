@@ -7,8 +7,8 @@ export default {
   path: '/resources/{id}',
   config: {
     tags: ['api', 'resources'],
-    description: 'Deletes a resources',
-    notes: 'Deletes resources.',
+    description: 'Deletes a resource',
+    notes: 'Deletes resource and returns fail or success.',
     auth: false,
     cors: true,
     validate: {
@@ -33,15 +33,16 @@ export default {
           id: request.params.id
         }
       })
-        .then(resource => {
-          if (!resource) throw Boom.notFound('No resource found.');
-          return resource.destroy();
-        })
-        .then(resultResource => {
-          return { deletedAt: resultResource.deletedAt };
-        })
-        .catch(Sequelize.ValidationError, convertValidationErrors)
-        .asCallback(reply);
+      .then(resource => {
+        if (!resource) throw Boom.notFound('No resource found.');
+
+        return resource.destroy();
+      })
+      .then(resultResource => {
+        return { deletedAt: resultResource.deletedAt };
+      })
+      .catch(Sequelize.ValidationError, convertValidationErrors)
+      .asCallback(reply);
 
     }
   }

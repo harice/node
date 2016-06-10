@@ -5,9 +5,9 @@ export default {
   method: 'GET',
   path: '/actions',
   config: {
-    tags: ['api', 'action'],
-    description: 'Gets a list of action',
-    notes: "Returns all the action",
+    tags: ['api', 'actions'],
+    description: 'Gets a list of actions.',
+    notes: "Returns all the actions.",
     auth: false,
     cors: true,
     validate: {

@@ -1,7 +1,7 @@
 'use strict';
 
 import createNewAction from './routes/createNewAction';
-import fetchAction from './routes/fetchAction';
+import fetchAction from './routes/fetchActions';
 import updateAction from './routes/updateAction';
 import deleteAction from './routes/deleteAction';
 import getAction from './routes/getAction';
@@ -19,9 +19,11 @@ import deleteResource from './routes/deleteResource';
 import fetchResources from './routes/fetchResources';
 
 import createPermission from './routes/createPermission';
+import fetchPermissions from './routes/fetchPermissions';
+import deletePermission from './routes/deletePermission';
+import getPermission from './routes/getPermission';
 
 exports.register = (server, options, next) => {
-
   server.route(createNewAction);
   server.route(fetchAction);
   server.route(updateAction);
@@ -41,10 +43,13 @@ exports.register = (server, options, next) => {
   server.route(fetchResources);
 
   server.route(createPermission);
+  server.route(fetchPermissions);
+  server.route(deletePermission);
+  server.route(getPermission);
 
   next();
 }
 
 exports.register.attributes = {
    name: 'permission'
- }
+}

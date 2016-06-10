@@ -6,9 +6,9 @@ export default {
   method: 'DELETE',
   path: '/actions/{id}',
   config: {
-    tags: ['api', 'action'],
-    description: 'Deletes a post',
-    notes: 'Deletes action.',
+    tags: ['api', 'actions'],
+    description: 'Deletes an action',
+    notes: 'Deletes action and returns fail or success.',
     auth: false,
     cors: true,
     validate: {
@@ -33,16 +33,16 @@ export default {
           id: request.params.id
         }
       })
-        .then(action => {
-          if (!action) throw Boom.notFound('No action found.');
+      .then(action => {
+        if (!action) throw Boom.notFound('No action found.');
 
-          return action.destroy();
-        })
-        .then(resultAction => {
-          return { deletedAt: resultAction.deletedAt };
-        })
-        .catch(Sequelize.ValidationError, convertValidationErrors)
-        .asCallback(reply);
+        return action.destroy();
+      })
+      .then(resultAction => {
+        return { deletedAt: resultAction.deletedAt };
+      })
+      .catch(Sequelize.ValidationError, convertValidationErrors)
+      .asCallback(reply);
 
     }
   }
