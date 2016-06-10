@@ -7,7 +7,7 @@ export default {
   config: {
     tags: ['api', 'resources'],
     description: 'Gets a list of resources',
-    notes: "Returns all the resources",
+    notes: "Returns all the resources.",
     auth: false,
     cors: true,
     validate: {
@@ -43,8 +43,8 @@ export default {
           ['createdAt', order]
         ]
       })
-        .catch(Sequelize.ValidationError, convertValidationErrors)
-        .asCallback(reply);
+      .catch(Sequelize.ValidationError, convertValidationErrors)
+      .asCallback(reply);
     }
   }
 }

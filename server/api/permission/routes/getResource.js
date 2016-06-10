@@ -7,8 +7,8 @@ export default {
   path: '/resources/{id}',
   config: {
     tags: ['api', 'resources'],
-    description: 'Gets info of resources',
-    notes: "Returns a resources info",
+    description: 'Gets a resource\'s info',
+    notes: "Returns the resource\'s details.",
     auth: false,
     cors: true,
     validate: {

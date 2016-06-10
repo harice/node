@@ -6,13 +6,13 @@ export default {
   path: '/actions',
   config: {
     tags: ['api', 'action'],
-    description: 'Creates a new Action',
-    notes: 'Takes a new action and returns the action',
+    description: 'Creates a new action',
+    notes: 'Takes a new action and returns the action info.',
     cors: true,
     auth : false,
     validate: {
       payload: {
-        name: Joi.string().required()
+        name: Joi.string().trim().required()
       }
     },
     plugins: {
@@ -33,11 +33,11 @@ export default {
       });
 
       a.save()
-        .then(savedAction => {
-          return savedAction.sanitizeForResponse();
-        })
-        .catch(Sequelize.ValidationError, convertValidationErrors)
-        .asCallback(reply);
+      .then(savedAction => {
+        return savedAction.sanitizeForResponse();
+      })
+      .catch(Sequelize.ValidationError, convertValidationErrors)
+      .asCallback(reply);
 
     }
   }
