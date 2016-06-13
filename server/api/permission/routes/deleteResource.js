@@ -8,6 +8,7 @@ export default {
   config: {
     tags: ['api', 'resources'],
     description: 'Deletes a resource',
+    notes: 'Deletes resource and returns fail or success.',
     auth: false,
     cors: true,
     validate: {

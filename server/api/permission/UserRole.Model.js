@@ -2,19 +2,15 @@
 
 export default (sequelize, DataTypes) => {
 
-  var Permission = sequelize.define(
+  var UserRole = sequelize.define(
     // Model Name
-    'Permission',
-
+    'UserRole',
     // Define Schema
     {
+      UserId: {
+        type: DataTypes.INTEGER
+      },
       RoleId: {
-        type: DataTypes.INTEGER
-      },
-      ResourceId: {
-        type: DataTypes.INTEGER
-      },
-      ActionId: {
         type: DataTypes.INTEGER
       }
     },
@@ -27,7 +23,7 @@ export default (sequelize, DataTypes) => {
     }
   );
 
-  return Permission;
+  return UserRole;
 
 };
 
@@ -35,9 +31,8 @@ export default (sequelize, DataTypes) => {
 function sanitizeForResponse() {
   var data = this.get();
 
+  if (data.User) data.User.sanitizeForResponse();
   if (data.Role) data.Role.sanitizeForResponse();
-  if (data.Resource) data.Resource.sanitizeForResponse();
-  if (data.Action) data.Action.sanitizeForResponse();
 
   delete data.updatedAt;
   delete data.deletedAt;

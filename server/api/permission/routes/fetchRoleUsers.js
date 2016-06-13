@@ -1,18 +1,20 @@
 import Joi from 'joi';
 import Sequelize from 'sequelize';
-import Boom from 'boom';
 import _ from 'lodash';
 
 export default {
   method: 'GET',
-  path: '/roles',
+  path: '/roles/{id}/users',
   config: {
-    tags: ['api', 'roles'],
-    description: 'Gets a list of roles',
-    notes: "Returns all the roles.",
+    tags: ['api', 'roles', 'users'],
+    description: 'Gets a list of users for role',
+    notes: "Returns all the users for a role.",
     auth: false,
     cors: true,
     validate: {
+      params: {
+        id: Joi.number().integer().required()
+      },
       query: {
         search: Joi.string().default('').optional(),
         asc: Joi.boolean().default(true),
@@ -29,34 +31,55 @@ export default {
       }
     },
     handler: (request, reply) => {
-      const { Role } = request.models;
+      const { User } = request.models;
+      const { UserRole } = request.models;
       const { convertValidationErrors } = request.server.plugins.common;
+
       const order = (request.query.asc) ? 'asc' : 'desc';
 
       const sanitizeForResponse = function(n) {
         return n.sanitizeForResponse();
       };
+      User.hasOne(UserRole, { foreignKey: 'UserId', as: 'UserRole' });
 
-      Role.findAndCountAll({
+      User.findAndCountAll({
         where: {
-          name: {
-            $iLike: '%' + request.query.search + '%'
-          }
+          $or: [
+            {
+              firstName: {
+                $iLike: '%' + request.query.search + '%'
+              }
+            },
+            {
+              lastName: {
+                $iLike: '%' + request.query.search + '%'
+              }
+            }
+          ]
         },
+        include: [
+          {
+            model: UserRole,
+            as: 'UserRole',
+            required: true,
+            where: {
+              RoleId: request.params.id
+            },
+            attributes: []
+          },
+        ],
         offset: request.query.offset,
         limit: request.query.limit,
         order: [
           ['createdAt', order]
         ]
       })
-      .then(roleResult => {
-        if (roleResult.count) {
-          roleResult.rows = _.map(roleResult.rows, sanitizeForResponse);
-
-          return roleResult;
+      .then(userResult => {
+        if (userResult.count) {
+          userResult.rows = _.map(userResult.rows, sanitizeForResponse);
         }
 
-        throw Boom.notFound('No roles found.');
+        return userResult ;
       })
       .catch(Sequelize.ValidationError, convertValidationErrors)
       .asCallback(reply);
