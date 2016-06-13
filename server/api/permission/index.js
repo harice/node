@@ -23,6 +23,8 @@ import fetchPermissions from './routes/fetchPermissions';
 import deletePermission from './routes/deletePermission';
 import getPermission from './routes/getPermission';
 
+import fetchRoleUsers from './routes/fetchRoleUsers';
+
 exports.register = (server, options, next) => {
   server.route(createNewAction);
   server.route(fetchAction);
@@ -46,6 +48,8 @@ exports.register = (server, options, next) => {
   server.route(fetchPermissions);
   server.route(deletePermission);
   server.route(getPermission);
+
+  server.route(fetchRoleUsers);
 
   next();
 }
