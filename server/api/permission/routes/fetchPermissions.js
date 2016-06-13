@@ -74,20 +74,17 @@ export default {
           {
             model: Role,
             as: 'Role',
-            required: true,
-            attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] }
+            required: true
           },
           {
             model: Resource,
             as: 'Resource',
-            required: true,
-            attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] }
+            required: true
           },
           {
             model: Action,
             as: 'Action',
-            required: true,
-            attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] }
+            required: true
           }
         ]
       })

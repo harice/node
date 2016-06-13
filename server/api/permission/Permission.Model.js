@@ -35,6 +35,10 @@ export default (sequelize, DataTypes) => {
 function sanitizeForResponse() {
   var data = this.get();
 
+  if (data.Role) data.Role.sanitizeForResponse();
+  if (data.Resource) data.Resource.sanitizeForResponse();
+  if (data.Action) data.Action.sanitizeForResponse();
+
   delete data.updatedAt;
   delete data.deletedAt;
 

@@ -60,20 +60,40 @@ export default {
         });
       })
       .then(permission => {
-        if (permission) {
-          return permission;
-        }
+        if (permission)  throw Boom.conflict('Permission already exists.');
 
         const p = Permission.build({
           RoleId: roleId,
           ResourceId: resourceId,
           ActionId: actionId
+        },
+        {
+          include: [
+            {
+              model: Role,
+              as: 'Role',
+              required: true
+            },
+            {
+              model: Resource,
+              as: 'Resource',
+              required: true
+            },
+            {
+              model: Action,
+              as: 'Action',
+              required: true
+            }
+          ]
         });
 
         return p.save();
       })
       .then(savedPermission => {
-        return savedPermission.sanitizeForResponse();
+        return savedPermission.reload();
+      })
+      .then(permission => {
+        return permission.sanitizeForResponse();
       })
       .catch(Sequelize.ValidationError, convertValidationErrors)
       .asCallback(reply);
