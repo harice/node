@@ -60,6 +60,7 @@ export default {
       })
       .catch(Sequelize.ValidationError, convertValidationErrors)
       .asCallback(reply);
+
     }
   }
 }
