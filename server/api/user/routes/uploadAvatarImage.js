@@ -1,7 +1,6 @@
 import Joi from 'joi';
 import Sequelize from 'sequelize';
 import Boom from 'boom';
-import _ from 'lodash';
 import AppConfig from '../../../config';
 import sharp from 'sharp';
 
@@ -68,29 +67,26 @@ export default {
       })
       .then(user => {
           if (!user) throw Boom.notFound('No user found.');
-          // upload avatar and update the avatar column of user
-          console.log("Buffering image");
-          // console.log(request.payload.avatarImageFile);
 
+          //cropping and resizing the avatar image and buffer it
           img = request.payload.avatarImageFile;
           useObj = user;
 
-          return sharp(request.payload.avatarImageFile._data)
+          return sharp(img._data)
                     .extract({ left: cropLeft, top: cropTop, width: cropWidth, height: cropHeight })
                     .resize(avatarResizeDimensionWidth, avatarResizeDimensionHeight)
                     .toBuffer();
 
       })
       .then(bufferedImage => {
-        console.log("Streaming to S3");
+        //uploading new avatar image to s3
         return streamFileToS3v2("avatars",img.hapi.filename, img.hapi.headers['content-type'], bufferedImage);
       })
       .then(res => {
-        console.log("Updating user");
         //remove old avatar file to s3
         let deletingResult = deleteFileToS3(useObj.avatarImageUrl);
-        console.log(deletingResult);
 
+        // update avatar url from user table
         return useObj.update({avatarImageUrl: res.key});
       })
       .catch(Sequelize.ValidationError, convertValidationErrors)

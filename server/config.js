@@ -97,6 +97,13 @@ const config = {
   avatarImageDefaultDimension: { // square
     height: 200, // px
     widht: 200 // px
+  },
+
+  fileUpload: {
+    defaultImageResolution: {
+      height: 500,
+      width: null // set null to auto-scale the height to match the width.
+    }
   }
 
 }
