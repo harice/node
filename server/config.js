@@ -92,6 +92,11 @@ const config = {
         }
       }
     }
+  },
+
+  notp:{
+    time: 300,
+    characters: 4
   }
 
 }
