@@ -24,6 +24,7 @@ export default (sequelize, DataTypes) => {
         }
       },
       password: DataTypes.STRING,
+      avatarImageUrl: DataTypes.STRING,
     },
 
     // Model Extensions
