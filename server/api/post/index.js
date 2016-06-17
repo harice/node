@@ -6,6 +6,7 @@ import updatePost from './routes/updatePost';
 import deletePost from './routes/deletePost';
 import likePost from './routes/likePost';
 
+
 exports.register = (server, options, next) => {
   server.route(createNewPost);
   server.route(fetchPosts);

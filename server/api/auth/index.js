@@ -58,6 +58,52 @@ exports.register = (server, options, next) => {
     }
   });
 
+  server.route({
+    method: 'POST',
+    path: '/auth/otp',
+    config: {
+      tags: ['api', 'auth'],
+      description: 'Sends user a code through email or text.',
+      notes: 'This will return a 4-digit code if non-existing, else shows User object.',
+      auth: false,
+      cors: true,
+      validate: {
+        payload: {
+          email: Joi.string().email(),
+          phoneNumber: Joi.string()
+        }
+      },
+      plugins: {
+        'hapi-swagger': {
+          responses: {
+            '401': {'description': 'Invalid credentials'},
+            '500': {'description': 'Internal Server Error'}
+          }
+        }
+      },
+      handler(request, reply) {
+        const { User } = request.models;
+        const { email, phoneNumber } = request.payload;
+
+        User.findOne({
+          where:{
+            $or:{
+              email:email,
+              phoneNumber: phoneNumber
+            }
+          }
+        })
+        .then(user => {
+          if(user){
+
+          }
+        })
+        .asCallback(reply);
+
+      }
+    }
+  });
+
   next();
 }
 
