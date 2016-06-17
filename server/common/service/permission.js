@@ -1,3 +1,5 @@
+'use strict';
+
 import Promise from 'bluebird';
 import Boom from 'boom';
 import _ from 'lodash';
@@ -151,32 +153,85 @@ export function getUserRoles(models, userId) {
   });
 }
 
+
+/**
+ * The following function has been modified to accept strings for resource and
+ * action. It can still take the Resource ID and Action ID
+ */
+
 /**
  * Checks if a User is allowed an Action to a Resource.
  * @param {object} models
  * @param {number} userId
- * @param {number} resourceId
- * @param {number} actionId
+ * @param {number|string} resource
+ * @param {number|string} action
  */
-export function isUserAllowed(models, userId, resourceId, actionId) {
+export function isUserAllowed(models, userId, resource, action) {
   return new Promise(function(resolve, reject) {
     const { Permission } = models;
     const { UserRole } = models;
     const { Role } = models;
+    const { Resource } = models;
+    const { Action } = models;
 
     const sanitizeForResponse = function(n) {
       return n.sanitizeForResponse();
     };
 
+    const pQuery = {
+      attributes: [ 'id', 'RoleId' ]
+    };
+
+    let pWhere = {};
+    let pInclude = [];
+
     UserRole.belongsTo(Role, { as: 'Role' });
 
-    Permission.findAll({
-      where: {
-        ResourceId: resourceId,
-        ActionId: actionId
-      },
-      attributes: [ 'id', 'RoleId' ]
-    })
+    if (_.isInteger(resource)) {
+      pWhere.ResourceId = resource;
+    }
+    else {
+      Permission.belongsTo(Resource, { foreignKey: 'ResourceId', as: 'Resource' });
+
+      pInclude.push({
+        model: Resource,
+        as: 'Resource',
+        where: {
+          name: {
+              $iLike: '%' + resource + '%'
+          }
+        },
+        attributes: []
+      });
+    }
+
+    if (_.isInteger(action)) {
+      pWhere.ActionId = action;
+    }
+    else {
+      Permission.belongsTo(Action, { foreignKey: 'ActionId', as: 'Action' });
+
+      pInclude.push({
+        model: Action,
+        as: 'Action',
+        where: {
+          name: {
+              $iLike: '%' + action + '%'
+          }
+        },
+        attributes: []
+      });
+    }
+
+    if (!_.isEmpty(pWhere)) {
+      pQuery.where = pWhere;
+    }
+
+    if (!_.isEmpty(pInclude)) {
+      pQuery.include = pInclude;
+    }
+
+    Permission.findAll(pQuery)
     .then(permissions => {
       let i, roleIds = [];
 
