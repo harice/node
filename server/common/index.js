@@ -3,6 +3,7 @@
 import convertValidationErrors from './lib/convertValidationErrors';
 import processOperationalErrors from './lib/processOperationalErrors';
 import streamFileToS3 from './lib/streamFileToS3';
+import * as permission from './service/permission';
 
 exports.register = (server, options, next) => {
 
@@ -10,7 +11,8 @@ exports.register = (server, options, next) => {
   server.expose({
     processOperationalErrors: processOperationalErrors(server),
     convertValidationErrors,
-    streamFileToS3
+    streamFileToS3,
+    permission
   })
 
   // Make the Sequelize models easily accessible from the request object
