@@ -1,9 +1,9 @@
 'use strict';
 
-import uploadImage from './routes/uploadImage';
+//import uploadImage from './routes/uploadImage';
 
 exports.register = (server, options, next) => {
-  server.route(uploadImage);
+  //server.route(uploadImage);
 
   next();
 }

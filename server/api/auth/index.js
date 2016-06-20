@@ -84,6 +84,7 @@ exports.register = (server, options, next) => {
       handler(request, reply) {
         const { User } = request.models;
         const { email, phoneNumber } = request.payload;
+        const { generateVerifyOTP, sendEmailViaSES } = request.server.plugins.common;
 
         User.findOne({
           where:{
@@ -95,8 +96,90 @@ exports.register = (server, options, next) => {
         })
         .then(user => {
           if(user){
+            var code = generateVerifyOTP(user.email);
+            if(email){
+              sendEmailViaSES({
+                email: user.email,
+                code: code,
+                type: 'otp',
+                template: 'otp.html'
+              })
+            }
+
+            if(phoneNumber){
+
+            }
+
+            return {
+              code: code
+            }
 
           }
+        })
+        .asCallback(reply);
+
+      }
+    }
+  });
+
+  server.route({
+    method: 'POST',
+    path: '/auth/resetpassword',
+    config: {
+      tags: ['api', 'auth'],
+      description: 'Sends email to user containing a link to enter new password.',
+      notes: 'This will save new reset password request and returns object if success.',
+      auth: false,
+      cors: true,
+      validate: {
+        payload: {
+          email: Joi.string().email()
+        }
+      },
+      plugins: {
+        'hapi-swagger': {
+          responses: {
+            '401': {'description': 'Invalid credentials'},
+            '500': {'description': 'Internal Server Error'}
+          }
+        }
+      },
+      handler(request, reply) {
+        const { User, ResetPasswordRequest } = request.models;
+        const { email } = request.payload;
+        const { sendEmailViaSES } = request.server.plugins.common;
+
+        User.findOne({
+          where:{
+            email:email
+          }
+        })
+        .then(user => {
+          if(!user){
+            throw Boom.notFound('User not found.')
+          }
+          var token = user.generateToken();
+          //async
+          sendEmailViaSES({
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            type: 'resetpassword',
+            template: 'reset-password.html',
+            token: token
+          })
+          .then(() => {
+            console.log('SENT')
+          })
+
+          var expirationDate = new Date();
+          expirationDate.setMinutes(expirationDate.getMinutes() + 360);
+
+          return ResetPasswordRequest.build({
+            userId: user.id,
+            token: token,
+            expiredAt: expirationDate
+          }).save()
         })
         .asCallback(reply);
 
