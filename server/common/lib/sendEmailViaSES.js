@@ -1,49 +1,37 @@
-var AppConfig  = require('../../../config');
-var Promise    = require('bluebird');
-var AWS        = require('aws-sdk');
-var Handlebars = require('handlebars');
-var fs         = require('fs');
-var Boom       = require('boom');
-var appRoot    = require('app-root-path');
+import AppConfig from '../../config';
+import Promise from 'bluebird';
+import AWS from 'aws-sdk';
+import fs from 'fs';
+import appRoot from 'app-root-path';
+import Boom from 'boom';
+import Handlebars from 'handlebars';
 
-AWS.config.update(AppConfig.get('/aws/config'));
+AWS.config.update(AppConfig.get('/aws'));
 var SES       = new AWS.SES();
 
 Promise.promisifyAll(SES);
 
-module.exports = function(email, type, template, user, options) {
-  var to  = [email];
-  var frm = 'do-not-reply@ridepedal.com';
+export default function(params) {
+  var to  = [params.email];
+  var frm = params.email;
+  var compiledTemplate;
 
-  var rawTemplatePath = appRoot +
-          '/server/views/emails/'+ template + '.html';
+  if(params.template){
 
-  var envExtension = '';
-  var envs = [
-    'dev','staging'
-  ]
+    var rawTemplatePath = appRoot +
+            '/server/emailTemplates/'+ params.template;
 
-  if(user && user.host){
-    for (var i = 0; i < envs.length; i++) {
-      if (user.host.indexOf(envs[i]) > -1) {
-        envExtension = '-' + envs[i];
+    var rawTemplate = '';
+    try {
+       rawTemplate = fs.readFileSync(rawTemplatePath)
+    } catch (e) {
+      if(params.template !== ''){
+        throw Boom.notFound("No email template found.");
       }
     }
+
+    compiledTemplate = Handlebars.compile(rawTemplate.toString());
   }
-
-  console.log("-- ENV EXTENSTION: " + envExtension);
-
-  var rawTemplate = '';
-
-  try {
-     rawTemplate = fs.readFileSync(rawTemplatePath)
-  } catch (e) {
-    if(template !== ''){
-      throw Boom.notFound("No email template found.");
-    }
-  }
-
-  var compiledTemplate = Handlebars.compile(rawTemplate.toString());
 
   var subject = { Data: 'Pedal Test Email' };
   var body = {
@@ -52,15 +40,16 @@ module.exports = function(email, type, template, user, options) {
     }
   };
 
-  switch (type) {
+  switch (params.type) {
 
-    case 'reset_password':
-      var linkToAdmin = 'https://admin'+envExtension+'.ridepedal.com?r='+
-                          user.token;
+    case 'resetpassword':
+
+      var link = 'http://localhost:8069/r='+params.token;
 
       var html = compiledTemplate({
-        firstName : user.first_name,
-        resetLink: linkToAdmin
+        firstName: params.firstName,
+        lastName: params.lastName,
+        link: link
       });
 
       body = {
@@ -72,9 +61,9 @@ module.exports = function(email, type, template, user, options) {
       subject = { Data: 'Reset your password' }
 
       break;
-    case 'pedaleremail':
+    case 'otp':
       html = compiledTemplate({
-        email : user.email
+        code: params.code
       });
 
       body = {
@@ -83,30 +72,7 @@ module.exports = function(email, type, template, user, options) {
         }
       }
 
-      subject = { Data: 'New pedaler application' }
-
-      break;
-    case 'welcome-pedaler':
-
-      body = {
-        Html: {
-          Data: rawTemplate.toString()
-        }
-      }
-
-      subject = { Data: 'Thanks For Your Interest in Pedal!' }
-
-      break;
-    case 'report':
-
-      subject = { Data: options.type }
-      body = options.booking.Rider.first_name+' '+options.booking.Rider.last_name+' - '+options.type;
-      body = {
-        Text:{
-          Data: body
-        }
-      }
-
+      subject = { Data: 'One-time-password' }
       break;
     default:
       console.log('default message... dont mind me...');

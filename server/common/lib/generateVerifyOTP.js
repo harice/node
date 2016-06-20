@@ -1,7 +1,7 @@
-var Notp = require('notp');
-var AppConfig = require('../../config');
+import Notp from 'notp';
+import AppConfig from '../../config';
 
-module.exports = function(key, token) {
+export default function(key, token) {
   if (!token) {
     return Notp.totp.gen(key, { time: AppConfig.get('/notp/time'), characters: AppConfig.get('/notp/characters') });
   }
