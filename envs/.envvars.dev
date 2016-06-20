@@ -2,3 +2,13 @@ export DEBUGGER=false   # Options: [true, false]
 export DEBUG_BRK=false  # Options: [true, false]
 export NODE_ENV=development   # Options: [local, development, staging, production]
 export DOCKER_ENV=local
+
+export PGHOST="postgres"
+export PGUSER="postgres"
+export PGPASSWORD=$POSTGRES_PASSWORD
+
+export GENESIS_PROJECT_DB_NAME="genesis-project-api"
+export GENESIS_PROJECT_DB_USER="genesis-project-api"
+export GENESIS_PROJECT_DB_PASS="insecuredevpassword"
+export GENESIS_PROJECT_DB_HOST="postgres"
+export GENESIS_PROJECT_DB_PORT=5432
