@@ -27,6 +27,12 @@ if [ ! -d $PROJECT_ROOT/node_modules ]; then
   # npm run gulp build
 fi
 
+echo $DOCKER_ENV;
+echo $GENESIS_PROJECT_DB_HOST;
+echo $GENESIS_PROJECT_DB_USER;
+echo $GENESIS_PROJECT_DB_NAME;
+echo $GENESIS_PROJECT_DB_PASS;
+
 # Wait till Postgres is available before continuing
 while true; do
     psql -c "select pg_postmaster_start_time()" >/dev/null 2>&1
