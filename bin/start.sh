@@ -32,6 +32,7 @@ echo $GENESIS_PROJECT_DB_HOST;
 echo $GENESIS_PROJECT_DB_USER;
 echo $GENESIS_PROJECT_DB_NAME;
 echo $GENESIS_PROJECT_DB_PASS;
+psql -c "select pg_postmaster_start_time()";
 
 # Wait till Postgres is available before continuing
 while true; do
