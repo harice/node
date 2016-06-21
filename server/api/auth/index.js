@@ -4,8 +4,74 @@ import AppConfig from '../../config';
 import Joi from 'joi';
 import Boom from 'boom';
 import validateJWT from './strategies/jwt';
+import Sequelize from 'sequelize';
+import _ from 'lodash';
 
 exports.register = (server, options, next) => {
+
+  // facebook
+  server.auth.strategy('facebook', 'bell', {
+    provider: 'facebook',
+    password: 'Hbb3r^FE%&bjQ3b@NnS!W3+qsKrV,N}U', // cookie encryption password
+    clientId: '479602518903081',
+    clientSecret: '1fb5ada26b8b79030925fa3f29d08527',
+    isSecure: false
+  });
+
+  server.route({
+    method: ['GET', 'POST'],
+    path: '/auth/facebook/callback',
+    config: {
+      auth: 'facebook',
+      handler: function (request, reply) {
+        if (!request.auth.isAuthenticated) {
+          return reply('Authentication failed due to: ' + request.auth.error.message);
+        }
+
+        const { User } = request.models;
+        const { UserIdpProfiles } = request.models;
+        const { convertValidationErrors } = request.server.plugins.common;
+        let data = request.auth.credentials;
+
+        UserIdpProfiles.findOrCreate({
+          where: {
+            profileId: data.profile.id
+          },
+          defaults: {
+            profileId: data.profile.id,
+            provider: data.provider
+          }
+        }).then(userIdpProfile => {
+          if (!userIdpProfile[0]) {
+            throw Boom.badRequest("Something went wrong, please try again.");
+          }
+
+          return User.findOrCreate({
+            where: {
+              email: data.profile.email || null
+            },
+            defaults: {
+              firstName: data.profile.name.first,
+              lastName: data.profile.name.last,
+              email: data.profile.email,
+              password: data.profile.email,
+              userIdpProfileId: userIdpProfile[0].id
+            }
+          }).then(user => {
+            if (!user[0]) {
+              throw Boom.badRequest("Something went wrong, please try again.");
+            }
+
+            return _.set(user[0].sanitizeForResponse(),
+              'token', user[0].generateToken()
+              );
+          })
+        })
+        .catch(Sequelize.ValidationError, convertValidationErrors)
+        .asCallback(reply);
+      }
+    }
+  });
 
   server.auth.strategy('jwt', 'jwt', true, {
     key: AppConfig.get('/security/jwtSecret'),
