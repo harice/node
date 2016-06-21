@@ -28,14 +28,16 @@ if [ ! -d $PROJECT_ROOT/node_modules ]; then
 fi
 
 # Wait till Postgres is available before continuing
-while true; do
-    psql -c "select pg_postmaster_start_time()" >/dev/null 2>&1
-    if [ $? -eq 0 ]; then
-        break
-    fi
-    echo "Waiting to connect to Postgres..."
-    sleep 1
-done
+if [ "$DOCKER_ENV" == "local" ] || [ "$DOCKER_ENV" == "development" ]; then
+  while true; do
+      psql -c "select pg_postmaster_start_time()" >/dev/null 2>&1
+      if [ $? -eq 0 ]; then
+          break
+      fi
+      echo "Waiting to connect to Postgres..."
+      sleep 1
+  done
+fi
 
 if [ "$DOCKER_ENV" == "local" ] || [ "$DOCKER_ENV" == "development" ]; then
   if psql -lqt | cut -d \| -f 1 | grep -w $GENESIS_PROJECT_DB_NAME; then
