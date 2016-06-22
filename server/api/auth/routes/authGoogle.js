@@ -8,7 +8,17 @@ export default {
   method: ['GET', 'POST'],
   path: '/auth/google/callback',
   config: {
+    tags: ['api', 'users'],
     auth: 'google',
+    cors: true,
+    plugins: {
+      'hapi-swagger': {
+        responses: {
+          '400': {'description': 'Validation error'},
+          '500': {'description': 'Internal Server Error'}
+        }
+      }
+    },
     handler: function (request, reply) {
       if (!request.auth.isAuthenticated) {
         return reply('Authentication failed due to: ' + request.auth.error.message);
