@@ -36,6 +36,7 @@ const manifest = {
     { plugin: './api/post' },
     { plugin: './api/permission' },
     { plugin: './api/file' },
+    { plugin: './api/card' },
     {
       plugin: {
         register: 'hapi-swagger',

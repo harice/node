@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import Sequelize from 'sequelize';
 
 export default {
   method: 'GET',
@@ -22,7 +23,33 @@ export default {
     },
     handler: (request, reply) => {
       const authdUser = request.auth.credentials;
-      reply(authdUser.sanitizeForResponse());
+      const { convertValidationErrors } = request.server.plugins.common;
+      const { User, Card } = request.models;
+
+      User.hasMany(Card,{
+        foreignKey: 'userId',
+        as: 'Cards'
+      })
+
+      User.findOne({
+        include:[
+          {
+            model: Card,
+            as: 'Cards',
+            reqired: false
+          }
+        ],
+        where:{
+          id: authdUser.id
+        }
+      })
+      .then(user => {
+        if(user){
+          return user.sanitizeForResponse();
+        }
+      })
+      .catch(Sequelize.ValidationError, convertValidationErrors)
+      .asCallback(reply)
     }
   }
 }
