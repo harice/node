@@ -5,13 +5,35 @@ import Joi from 'joi';
 import Boom from 'boom';
 import validateJWT from './strategies/jwt';
 
+import authFacebook from './routes/authFacebook';
+import authGoogle from './routes/authGoogle';
+
 exports.register = (server, options, next) => {
+
+  server.auth.strategy('facebook', 'bell', {
+    provider: 'facebook',
+    password: AppConfig.get('/identityProviders/facebook/cookiePassword'),
+    clientId: AppConfig.get('/identityProviders/facebook/clientId'),
+    clientSecret:  AppConfig.get('/identityProviders/facebook/clientSecret'),
+    isSecure: false
+  });
+
+  server.auth.strategy('google', 'bell', {
+    provider: 'google',
+    password: AppConfig.get('/identityProviders/google/cookiePassword'),
+    clientId: AppConfig.get('/identityProviders/google/clientId'),
+    clientSecret:  AppConfig.get('/identityProviders/google/clientSecret'),
+    isSecure: false
+  });
 
   server.auth.strategy('jwt', 'jwt', true, {
     key: AppConfig.get('/security/jwtSecret'),
     validateFunc: validateJWT,
     verifyOptions: { algorithms: [ 'HS256' ] }
   });
+
+  server.route(authFacebook);
+  server.route(authGoogle);
 
   server.route({
     method: 'POST',

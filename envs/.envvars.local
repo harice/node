@@ -15,3 +15,9 @@ export GENESIS_PROJECT_DB_USER="genesis-project-api"
 export GENESIS_PROJECT_DB_PASS="insecuredevpassword"
 export GENESIS_PROJECT_DB_HOST="postgres"
 export GENESIS_PROJECT_DB_PORT=5432
+
+export FACEBOOK_CLIENT_ID=""
+export FACEBOOK_CLIENT_SECRET=""
+
+export GOOGLE_CLIENT_ID=""
+export GOOGLE_CLIENT_SECRET=""
