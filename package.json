@@ -28,6 +28,7 @@
     "babel-preset-stage-0": "^6.3.13",
     "babel-register": "^6.9.0",
     "bcrypt": "^0.8.5",
+    "bell": "^7.9.0",
     "bluebird": "^3.2.0",
     "boom": "^3.1.0",
     "confidence": "^1.4.2",
@@ -47,6 +48,7 @@
     "pg": "^4.4.0",
     "pg-hstore": "^2.3.2",
     "query-string": "^3.0.0",
+    "randomstring": "^1.1.5",
     "sequelize": "^3.19.0",
     "sqlizr": "^1.2.0",
     "vision": "^4.0.0"

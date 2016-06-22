@@ -17,13 +17,14 @@ const manifest = {
   registrations: [
     { plugin: 'inert' },
     { plugin: 'vision' },
+    { plugin: 'bell' },
     {
       plugin: {
         register: 'good',
         options: AppConfig.get('/logging')
       }
     },
-    {plugin: 'hapi-auth-jwt2'},
+    { plugin: 'hapi-auth-jwt2' },
     {
       plugin: {
         register: './sequelize',
