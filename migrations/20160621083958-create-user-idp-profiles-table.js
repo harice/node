@@ -9,7 +9,7 @@ module.exports = {
         autoIncrement: true
       },
       profileId: {
-        type: Sequelize.BIGINT
+        type: Sequelize.STRING
       },
       provider: {
         type: Sequelize.STRING

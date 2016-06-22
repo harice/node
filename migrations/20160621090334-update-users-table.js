@@ -15,6 +15,6 @@ module.exports = {
   },
 
   down: function (queryInterface) {
-    return queryInterface.removeColumn('Users', 'userIdpInformationId');
+    return queryInterface.removeColumn('Users', 'userIdpProfileId');
   }
 };

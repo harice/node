@@ -9,7 +9,7 @@ export default (sequelize, DataTypes) => {
       autoIncrement: true
     },
     profileId: {
-      type: DataTypes.BIGINT
+      type: DataTypes.STRING
     },
     provider: {
       type: DataTypes.STRING
