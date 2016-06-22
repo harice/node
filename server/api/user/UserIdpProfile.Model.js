@@ -2,7 +2,7 @@
 
 export default (sequelize, DataTypes) => {
 
-  var UserIdpProfiles = sequelize.define('UserIdpProfiles', {
+  var UserIdpProfile = sequelize.define('UserIdpProfile', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -17,11 +17,11 @@ export default (sequelize, DataTypes) => {
   }, {
     classMethods: {
       associate: function(models) {
-        UserIdpProfiles.hasOne(models.User, { foreignKey: 'userIdpProfileId' });
+        UserIdpProfile.hasOne(models.User, { foreignKey: 'userIdpProfileId' });
       }
     }
   });
 
-  return UserIdpProfiles;
+  return UserIdpProfile;
 
 };
