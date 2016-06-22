@@ -1,6 +1,7 @@
 'use strict';
 
 import Confidence from 'confidence';
+import randomstring from 'randomstring';
 
 const criteria = {
     env: process.env.NODE_ENV
@@ -64,6 +65,19 @@ const config = {
     accessKeyId: 'AKIAJODVXOKGFLOSDAGA',
     secretAccessKey: '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',
     region: 'us-west-2' //aws region here, recommended: us-west-2
+  },
+
+  identityProviders: {
+    facebook: {
+      cookiePassword: randomstring.generate(),
+      clientId: process.env.FACEBOOK_CLIENT_ID || 'invalid',
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET || 'invalid',
+    },
+    google: {
+      cookiePassword: randomstring.generate(),
+      clientId: process.env.GOOGLE_CLIENT_ID || 'invalid',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'invalid',
+    }
   },
 
   media: {

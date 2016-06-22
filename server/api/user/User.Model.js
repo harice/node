@@ -26,6 +26,7 @@ export default (sequelize, DataTypes) => {
       password: DataTypes.STRING,
       avatarImageUrl: DataTypes.STRING,
       phoneNumber: DataTypes.STRING,
+      gender: DataTypes.STRING,
       company: DataTypes.STRING,
       address1: DataTypes.STRING,
       address2: DataTypes.STRING,
@@ -33,7 +34,7 @@ export default (sequelize, DataTypes) => {
       state: DataTypes.STRING,
       country: DataTypes.STRING,
       zipcode: DataTypes.STRING,
-      gender: DataTypes.STRING
+      userIdpProfileId: DataTypes.BIGINT
     },
 
     // Model Extensions
