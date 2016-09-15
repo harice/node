@@ -1,7 +1,7 @@
 {
-  "name": "genesis-project-api",
+  "name": "node-js",
   "version": "0.0.1",
-  "description": "genesis-project-api",
+  "description": "node-js",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ElementzInteractive/genesis-project-api.git"
+    "url": "https://github.com/"
   },
   "author": "ElementzInteractive",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ElementzInteractive/genesis-project-api/issues"
+    "url": "https://github.com/"
   },
-  "homepage": "https://github.com/ElementzInteractive/genesis-project-api",
+  "homepage": "https://github.com/",
   "dependencies": {
     "async": "^1.5.0",
     "babel-core": "^6.4.0",
