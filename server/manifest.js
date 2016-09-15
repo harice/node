@@ -15,6 +15,8 @@ const manifest = {
     port: AppConfig.get('/connection/port')
   }],
   registrations: [
+    { plugin: 'inert' },
+    { plugin: 'vision' },
     {
       plugin: {
         register: 'good',
@@ -29,6 +31,7 @@ const manifest = {
     },
     { plugin: './common' },
     { plugin: './api/post' },
+    { plugin: './api/user' },
     {
       plugin: {
         register: 'hapi-swagger',

@@ -26,7 +26,7 @@ const config = {
   },
 
   connection : {
-    port : '8069',
+    port : '8029',
     host : '0.0.0.0'
   },
 
