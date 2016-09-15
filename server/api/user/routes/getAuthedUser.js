@@ -24,25 +24,11 @@ export default {
     handler: (request, reply) => {
       const authdUser = request.auth.credentials;
       const { convertValidationErrors } = request.server.plugins.common;
-      const { User, Card } = request.models;
+      const { User } = request.models;
 
-      User.hasMany(Card,{
-        foreignKey: 'userId',
-        as: 'Cards'
-      })
+      console.log(authdUser)
 
-      User.findOne({
-        include:[
-          {
-            model: Card,
-            as: 'Cards',
-            reqired: false
-          }
-        ],
-        where:{
-          id: authdUser.id
-        }
-      })
+      User.findById(authdUser.id)
       .then(user => {
         if(user){
           return user.sanitizeForResponse();

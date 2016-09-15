@@ -1,6 +1,6 @@
 export ENV=local
 
-export NODE_PROJECT_DB_NAME="crud"
+export NODE_PROJECT_DB_NAME="node"
 export NODE_PROJECT_DB_USER="postgres"
 export NODE_PROJECT_DB_PASS=""
 export NODE_PROJECT_DB_HOST="postgres"
