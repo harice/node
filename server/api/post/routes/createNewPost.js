@@ -36,11 +36,8 @@ export default {
     handler: (request, reply) => {
       const { Post } = request.models;
       const { convertValidationErrors } = request.server.plugins.common;
-      const { streamFileToS3 } = request.server.plugins.common;
       const authdUser = request.auth.credentials;
 
-      streamFileToS3("posts", request.payload.imageFile)
-        .then(res => {
           const p = Post.build({
             UserId: authdUser.id,
             title: request.payload.title,
@@ -48,8 +45,8 @@ export default {
             imageUrl: res.key
           });
 
-          return p.save();
-        })
+          return p.save()
+
         .then(savedPost => {
           return savedPost.sanitizeForResponse();
         })

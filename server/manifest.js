@@ -15,16 +15,12 @@ const manifest = {
     port: AppConfig.get('/connection/port')
   }],
   registrations: [
-    { plugin: 'inert' },
-    { plugin: 'vision' },
-    { plugin: 'bell' },
     {
       plugin: {
         register: 'good',
         options: AppConfig.get('/logging')
       }
     },
-    { plugin: 'hapi-auth-jwt2' },
     {
       plugin: {
         register: './sequelize',
@@ -32,12 +28,7 @@ const manifest = {
       }
     },
     { plugin: './common' },
-    { plugin: './api/auth' },
-    { plugin: './api/user' },
     { plugin: './api/post' },
-    { plugin: './api/permission' },
-    { plugin: './api/file' },
-    { plugin: './api/card' },
     {
       plugin: {
         register: 'hapi-swagger',

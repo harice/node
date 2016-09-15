@@ -8,27 +8,14 @@
 #   exit 1
 # fi
 
-# If no DOCKER_ENV is set, die
-if [ -z $DOCKER_ENV ]; then
-  echo "Your .envvars file must declare a DOCKER_ENV var"
+# If no ENV is set, die
+if [ -z $ENV ]; then
+  echo "Your .envvars file must declare a ENV var"
   exit 1
 fi
 
-# Check to see if our node_modules directory does not exist
-if [ ! -d $PROJECT_ROOT/node_modules ]; then
-  # If not, it was probably wiped out by Vagrant mounting a host volume
-  # on the start of the container, which wipes out the the node_modules
-  # folder that was created by the image. So we will just copy it back in
-  # from the /tmp folder just like we do in the Dockerfile
-  echo "Copying node_modules"
-  cp -a /tmp/app/node_modules $PROJECT_ROOT
-
-  # And we'll also rebuild our static files
-  # npm run gulp build
-fi
-
 # Wait till Postgres is available before continuing
-if [ "$DOCKER_ENV" == "local" ] || [ "$DOCKER_ENV" == "development" ]; then
+if [ "$ENV" == "local" ]; then
   while true; do
       psql -c "select pg_postmaster_start_time()" >/dev/null 2>&1
       if [ $? -eq 0 ]; then
@@ -39,20 +26,20 @@ if [ "$DOCKER_ENV" == "local" ] || [ "$DOCKER_ENV" == "development" ]; then
   done
 fi
 
-if [ "$DOCKER_ENV" == "local" ] || [ "$DOCKER_ENV" == "development" ]; then
-  if psql -lqt | cut -d \| -f 1 | grep -w $GENESIS_PROJECT_DB_NAME; then
-    echo "$GENESIS_PROJECT_DB_NAME database already exists...moving on"
+if [ "$ENV" == "local" ]; then
+  if psql -lqt | cut -d \| -f 1 | grep -w $NODE_PROJECT_DB_NAME; then
+    echo "$NODE_PROJECT_DB_NAME database already exists...moving on"
   else
-    echo "$GENESIS_PROJECT_DB_NAME database does not exist"
-    echo "...create MAIN user $GENESIS_PROJECT_DB_USER with password $GENESIS_PROJECT_DB_PASS"
-    psql -c "create user \"$GENESIS_PROJECT_DB_USER\" with password '$GENESIS_PROJECT_DB_PASS'"
+    echo "$NODE_PROJECT_DB_NAME database does not exist"
+    echo "...create MAIN user $NODE_PROJECT_DB_USER with password $NODE_PROJECT_DB_PASS"
+    psql -c "create user \"$NODE_PROJECT_DB_USER\" with password '$NODE_PROJECT_DB_PASS'"
 
-    echo "...create MAIN database $GENESIS_PROJECT_DB_NAME with owner $GENESIS_PROJECT_DB_USER encoding='utf8' template template0"
-    psql -c "create database \"$GENESIS_PROJECT_DB_NAME\" with owner \"$GENESIS_PROJECT_DB_USER\" encoding='utf8' template template0"
+    echo "...create MAIN database $NODE_PROJECT_DB_NAME with owner $NODE_PROJECT_DB_USER encoding='utf8' template template0"
+    psql -c "create database \"$NODE_PROJECT_DB_NAME\" with owner \"$NODE_PROJECT_DB_USER\" encoding='utf8' template template0"
   fi
 fi
 
-if [ "$DOCKER_ENV" == "local" ] || [ "$DOCKER_ENV" == "development" ]; then
+if [ "$ENV" == "local" ]; then
   echo "Running migrations..."
   sequelize db:migrate
 fi

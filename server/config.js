@@ -33,7 +33,7 @@ const config = {
   api: {
     swagger: {
       info: {
-        title: 'genesis-project-api',
+        title: 'NODEJS',
         description: 'API Documentation',
       },
       securityDefinitions: [{
@@ -61,38 +61,14 @@ const config = {
     }
   },
 
-  aws: {
-    accessKeyId: 'AKIAJODVXOKGFLOSDAGA',
-    secretAccessKey: '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',
-    region: 'us-west-2' //aws region here, recommended: us-west-2
-  },
-
-  identityProviders: {
-    facebook: {
-      cookiePassword: randomstring.generate(),
-      clientId: process.env.FACEBOOK_CLIENT_ID || 'invalid',
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET || 'invalid',
-    },
-    google: {
-      cookiePassword: randomstring.generate(),
-      clientId: process.env.GOOGLE_CLIENT_ID || 'invalid',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'invalid',
-    }
-  },
-
-  media: {
-    bucket: 'genesis-project-api',
-    cloudfront: '' //cloudfront URL here
-  },
-
   db: {
     sequelize: {
-      name: process.env.GENESIS_PROJECT_DB_NAME,
-      user: process.env.GENESIS_PROJECT_DB_USER,
-      pass: process.env.GENESIS_PROJECT_DB_PASS,
-      port: process.env.GENESIS_PROJECT_DB_PORT,
-      host: process.env.GENESIS_PROJECT_DB_HOST,
-      database: process.env.GENESIS_PROJECT_DB_NAME,
+      name: process.env.NODE_PROJECT_DB_NAME,
+      user: process.env.NODE_PROJECT_DB_USER,
+      pass: process.env.NODE_PROJECT_DB_PASS,
+      port: process.env.NODE_PROJECT_DB_PORT,
+      host: process.env.NODE_PROJECT_DB_HOST,
+      database: process.env.NODE_PROJECT_DB_NAME,
       dialect: 'postgres',
       logging: {
         $filter: 'env',
@@ -111,18 +87,6 @@ const config = {
     time: 300,
     characters: 4
   },
-
-  avatarImageDefaultDimension: { // square
-    height: 200, // px
-    widht: 200 // px
-  },
-
-  fileUpload: {
-    defaultImageResolution: {
-      height: 500,
-      width: null // set null to auto-scale the height to match the width.
-    }
-  }
 
 }
 
